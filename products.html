@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="module" src="./js/product.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <title>week 02 / Products Page</title>
+</head>
+
+<body class="bg--diagonal-line text-white">
+    <div id="app" class="container mx-auto flex flex-wrap p-3 h-screen">
+        <!-- section for table list -->
+        <div class="p-4 flex-auto xl:w-7/12">
+            <!-- <h2 class="text-3xl mb-3">產品列表</h2> -->
+            <div class="flex-row sm:flex justify-between sm:items-end">
+                <h2 class="text-3xl mb-3">產品列表</h2>
+                <span>目前有 {{ products.length }} 項產品</span>
+            </div>
+            <div class="rounded-lg text-center bg-gray-50 overflow-x-auto">
+                <div class="grid grid-cols-12 border-b-2 font-bold bg-blue-900 rounded-t-lg items-center">
+                    <span class="p-4 col-span-1">#</span>
+                    <span class="p-4 col-span-3 text-left">產品名稱</span>
+                    <span class="p-4 col-span-2">原價</span>
+                    <span class="p-4 col-span-2">售價</span>
+                    <span class="p-4 col-span-2">是否啟用</span>
+                    <span class="p-4 col-span-2">查看細節</span>
+                </div>
+                <ul class="divide-y-2 divide-gray-200">
+                    <li class="grid grid-cols-12 text-black items-center" v-for="(item,index) in products"
+                        :key="item.title">
+                        <div class="p-4 col-span-1">{{ index }}</div>
+                        <div class="p-4 col-span-3 text-left font-bold">{{ item.title }}</div>
+                        <div class="p-4 col-span-2">{{ item.origin_price }}</div>
+                        <div class="p-4 col-span-2">{{ item.price }}</div>
+                        <div class="p-4 col-span-2">
+                            <span class="text-green-500" v-if="item.is_enabled">啟用</span>
+                            <span class="text-red-500" v-else>未啟用</span>
+                        </div>
+                        <div class="p-4 col-span-2 sm:flex justify-center">
+                            <button type="button" class="flex-none bg-emerald-500 hover:bg-emerald-700 
+                                    focus:outline-none focus:ring-4 focus:ring-emerald-600 focus:ring-opacity-50 
+                                    text-white sm:px-4 py-1 sm:-my-4 font-bold rounded-md"
+                                @click="getItem( item )">細節</button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- section for detail -->
+        <div class="p-4 flex-auto xl:w-5/12">
+            <h3 class="text-3xl mb-3">單一產品細節</h3>
+
+            <div class="bg-gray-700 w-full rounded-lg flex p-6 justify-center opacity-80" v-if="!currentItem.id">
+                <p class="text-xl text-white font-bold">請選擇任一商品查看</p>
+            </div>
+
+            <div class="bg-white w-full rounded-lg sm:flex mt-6 sm:mx-3 md:mx-0" v-else>
+                <div
+                    class="flex-none w-full sm:w-44 md:w-48 xl:w-44 sm:h-60 md:h-full xl:h-60 sm:-mt-3 md:mt-0 lg:mt-0 xl:-mt-3 sm:-ml-3 md:ml-0 xl:-ml-3">
+                    <img id="productImg" :src="currentItem.imageUrl"
+                        class="w-full sm:h-full object-cover rounded-t-lg md:rounded-l-lg lg:rounded-lg" />
+                </div>
+
+                <div class="flex-auto p-6 text-gray-900">
+                    <div class="flex flex-wrap items-center mb-1">
+                        <h1 class="flex-auto text-xl md:text-4xl xl:text-xl">{{ currentItem.title }}</h1>
+                        <p class="text-gray-500">
+                            <span class="font-bold text-xl md:text-4xl xl:text-xl text-yellow-500 mr-1">${{
+                                currentItem.price }}</span>
+                            <del class="text-xs">${{ currentItem.origin_price }}</del>
+                        </p>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="bg-red-300 py-1 px-2 text-xs text-white font-bold rounded-full">{{
+                            currentItem.category }}</span>
+                        <div class="mb-3">
+                            <p class="text-gray-300 text-xs">
+                                <span class="text-red-300 font-bold text-base">✩ </span>
+                                <span class="text-red-300"> {{ currentItem.rating }}</span> (489)
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="w-full h-px mt-2 mb-6 bg-gray-200"></div>
+
+
+                    <div class="flex flex-col gap-2 2xl:mb-8 text-gray-600">
+                        <p class="text-sm"><span class="text-yellow-600 font-bold">商品內容：</span>{{ currentItem.content }}
+                        </p>
+                        <p class="text-sm leading-6">{{ currentItem.description }}</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
